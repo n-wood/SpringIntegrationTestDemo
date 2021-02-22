@@ -7,6 +7,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+import java.util.concurrent.Callable;
 
 @RestController
 public class DemoController {
@@ -14,9 +17,18 @@ public class DemoController {
     @Autowired
     TimeService service;
 
+
     @GetMapping("/what-time-is-it")
     public ResponseEntity<DateTimeModel> handleGetRequest()
     {
-        return new ResponseEntity<>( service.getServerTime(), HttpStatus.OK );
+       return new ResponseEntity<>( service.getServerTime(), HttpStatus.OK );
+    }
+
+    @GetMapping("/what-time-is-it-async")
+    public Mono<ResponseEntity<DateTimeModel>> handleAsyncGetRequest()
+    {
+        return service.getServerTimeAsync().map(
+                result-> ResponseEntity.status(HttpStatus.OK).body(result));
+
     }
 }

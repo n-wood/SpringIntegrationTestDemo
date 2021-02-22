@@ -10,11 +10,6 @@
         "status": 200,
         "headers": {
           "Content-Type": "application/json"
-        },
-        "delayDistribution": {
-          "type": "lognormal",
-          "median": 500,
-          "sigma": 0.5
         }
       }
     }
