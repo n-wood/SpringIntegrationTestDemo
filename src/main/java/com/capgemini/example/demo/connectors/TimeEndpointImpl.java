@@ -8,8 +8,8 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class TimeEndpointImpl implements TimeEndpoint {
 
-    private String configuredApiEndpointUrl = "http://worldtimeapi.org/api/ip";
-
+    //private String configuredApiEndpointUrl = "http://worldtimeapi.org/api/ip";
+    private String configuredApiEndpointUrl = "http://localhost:8081/mock/example";
     @Autowired
     RestTemplate restTemplate;
 

@@ -1,0 +1,22 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/mock/example"
+      },
+      "response": {
+        "bodyFileName": "exampleSuccessResponse.json",
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "delayDistribution": {
+          "type": "lognormal",
+          "median": 500,
+          "sigma": 0.5
+        }
+      }
+    }
+  ]
+}
