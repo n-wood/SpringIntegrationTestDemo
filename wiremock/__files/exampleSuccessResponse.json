@@ -1,0 +1,17 @@
+{
+  "abbreviation": "GMT",
+  "client_ip": "51.9.133.105",
+  "datetime": "2021-02-22T09:55:48.526270+00:00",
+  "day_of_week": 1,
+  "day_of_year": 53,
+  "dst": false,
+  "dst_from": null,
+  "dst_offset": 0,
+  "dst_until": null,
+  "raw_offset": 0,
+  "timezone": "Europe/London",
+  "unixtime": 1613987748,
+  "utc_datetime": "2021-02-22T09:55:48.526270+00:00",
+  "utc_offset": "+00:00",
+  "week_number": 8
+}

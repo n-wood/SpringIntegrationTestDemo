@@ -39,3 +39,5 @@ target/
 
 *.code-workspace
 .vscode
+
+jmeter/
