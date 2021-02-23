@@ -11,6 +11,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
@@ -18,19 +19,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.reactive.function.BodyInserters;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@SpringBootTest( properties = { "management.server.port=" } )
+@SpringBootTest (webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = { "management.server.port=" , "server.port=8081"})
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@AutoConfigureWebTestClient
 public class GetTimeITest {
 
     final static String WIREMOCK_HOST = "localhost";
@@ -42,6 +46,9 @@ public class GetTimeITest {
 
     @Autowired
     MockMvc mvc;
+
+    @Autowired
+    private WebTestClient webTestClient;
 
     @Before
     public void setup() {
@@ -69,11 +76,12 @@ public class GetTimeITest {
                                 "\",\"client_ip\":\"51.9.125.137\",\"abbreviation\":\"BST\"}")));
 
 
+
     }
 
     @Test
     public void testForSuccess() throws Exception {
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("http://localhost:8080/what-time-is-it"));
+        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.get("http://localhost:8081/what-time-is-it"));
         resultActions.andExpect(status().isOk());
 
         MvcResult mvcResult = resultActions.andReturn();
@@ -90,5 +98,28 @@ public class GetTimeITest {
 
     }
 
+    @Test
+    public void testForAysncSuccess() throws Exception {
+        String responseBody = webTestClient.get()
+                .uri("http://localhost:8081/what-time-is-it-async")
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(String.class)
+                .getResponseBody()
+                .blockFirst();
+
+        DateTimeModel actualResult = new ObjectMapper().readValue(responseBody, DateTimeModel.class);
+
+        assertEquals("Expected and actual times do not match",
+                "Thu Apr 16 09:44:27 BST 2020",
+                actualResult.getDateTime());
+
+        assertEquals("Expected and actual ip addresses do not match",
+                "51.9.125.137",
+                actualResult.getIpAddress());
+
+
+    }
 
 }
