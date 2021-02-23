@@ -15,7 +15,7 @@ public class TimeServiceImpl implements TimeService {
 
     @Autowired
     TimeEndpoint connector;
-    private Object WorldTimeAPIResponseModel;
+
 
     @Override
     public DateTimeModel getServerTime() {
